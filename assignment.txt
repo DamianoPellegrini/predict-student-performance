@@ -1,0 +1,8 @@
+D3 - Successo accademico - giuseppe.vizzari@unimib.it 
+Analizzare il dataset descritto qui
+(https://archive.ics.uci.edu/dataset/697/predict+students+dropout+and+academic+success)
+con particolare riferimento alla possibilità di
+prevedere il successo di una persona nel percorso accademico.
+Potete pensare di usare KNIME, Python, o il linguaggio/software che preferite.
+Farei una baseline con alberi di decisione,
+per poi adottare modelli più complicati quali random forest e reti neurali. 

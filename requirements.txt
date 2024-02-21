@@ -1,0 +1,2 @@
+sklearn - 0.24.1
+ucimlrepo - 0.1.0
