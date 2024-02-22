@@ -15,7 +15,7 @@ from sklearn.ensemble import (
 from sklearn.neural_network import MLPClassifier
 from ucimlrepo import fetch_ucirepo
 
-# import pandas as pd
+import pandas as pd
 import warnings
 import os
 
@@ -35,6 +35,16 @@ students = fetch_ucirepo(id=697)
 X = students.data.features  #
 y = students.data.targets  # Classes: Graduate, Enrolled, Dropped
 
+ds = pd.DataFrame(students.data.original)
+# Converting to numeric value to calculate correlation
+ds["Target"] = ds["Target"].map({"Graduate": 0, "Enrolled": 1, "Dropped": 2})
+corr = ds.corr()['Target']
+print("CORR\n", ds.corr()["Target"])
+
+# # Keep only the features with correlation above 0.1
+# X = X[:, corr[corr > 0.1].index]
+
+
 # 'Dropout':1421,
 # 'Enrolled':794,
 # 'Graduate':2209
@@ -44,10 +54,11 @@ y = students.data.targets  # Classes: Graduate, Enrolled, Dropped
 # class_weight = {k[0]: v for k, v in class_weight.items()}
 # print("CLASS WEIGHTS\n", class_weight)
 # class_weight = None       # No class balancing
-class_weight = "balanced" # Auto-balance classes
+class_weight = "balanced"  # Auto-balance classes
 
 # metadata
-print("META\n", students.metadata)
+metadata = {key: students.metadata[key] for key in ['name', 'num_instances', 'num_features', 'has_missing_values']}
+print("META\n", metadata)
 
 # variable information
 print("VARS\n", students.variables)
@@ -103,7 +114,7 @@ classifiers = {
         class_weight=class_weight,
         n_jobs=-1,
     ),
-    # "adabst": AdaBoostClassifier(algorithm="SAMME"),
+    "adabst": AdaBoostClassifier(algorithm="SAMME"),
     "perceptron": Perceptron(
         random_state=RANDOM_STATE,
         penalty="l2",
