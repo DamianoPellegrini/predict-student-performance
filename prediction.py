@@ -44,15 +44,12 @@ print("CORR\n", ds.corr()["Target"])
 # # Keep only the features with correlation above 0.1
 # X = X[:, corr[corr > 0.1].index]
 
-
-# 'Dropout':1421,
-# 'Enrolled':794,
-# 'Graduate':2209
 # class_freqs = y.value_counts()
-# print("CLASS FREQS\n", class_freqs)
 # class_weight = class_freqs.max() / class_freqs
 # class_weight = {k[0]: v for k, v in class_weight.items()}
+# print("CLASS FREQS\n", class_freqs)
 # print("CLASS WEIGHTS\n", class_weight)
+
 # class_weight = None       # No class balancing
 class_weight = "balanced"  # Auto-balance classes
 
@@ -60,11 +57,11 @@ class_weight = "balanced"  # Auto-balance classes
 metadata = {key: students.metadata[key] for key in ['name', 'num_instances', 'num_features', 'has_missing_values']}
 print("META\n", metadata)
 
-# variable information
+# datasets variable informations
 print("VARS\n", students.variables)
 
-# For reproducibility
-RANDOM_STATE = 1337
+import random
+RANDOM_STATE = random.randint(0, 1337)
 FORMAT_NAME_WIDTH = 27
 FORMAT_SCORE_WIDTH = 8
 
@@ -191,20 +188,18 @@ X_train, X_test, y_train, y_test = train_test_split(
 # print("Accuracy: ", accuracy_score(y_test, y_pred))
 # print(clf.best_params_)
 # print(clf.best_estimator_)
-# exit(99)
+# exit(99) # Exit early since im optimizing one model at a time
 
 scores = {}
 print(f"{'Classifier Name':<{FORMAT_NAME_WIDTH}} {'Accuracy':>{FORMAT_SCORE_WIDTH}}")
 for name, classifier in classifiers.items():
-
     model = classifier.__class__.__name__
     pipeline = make_pipeline(StandardScaler(), classifier)
-    pipeline.fit(X_train, y_train)
-    score = pipeline.score(X_test, y_test)
-    scores[name] = score
+    # pipeline.fit(X_train, y_train)
+    # score = pipeline.score(X_test, y_test)
+    # scores[name] = score
 
-    aaa = cross_val_score(pipeline, X, y, cv=5)
-    scores[name] = aaa.mean()
+    scores[name] = cross_val_score(pipeline, X, y, cv=5).mean()
     print(f"{model:<{FORMAT_NAME_WIDTH}} {scores[name]:>{FORMAT_SCORE_WIDTH}.02%}")
 
 # Keep only scores above 76%
